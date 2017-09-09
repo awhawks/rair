@@ -26,8 +26,8 @@ extern "C" {
                        flags: c_int,
                        mode: c_int)
                        -> *const c_void;
-    fn r_io_pwrite(io: *const c_void, paddr: u64, buf: *const u8, len: usize);
-    fn r_io_pread(io: *const c_void, paddr: u64, buff: *const u8, len: usize);
+    fn r_io_pwrite_at(io: *const c_void, paddr: u64, buf: *const u8, len: usize);
+    fn r_io_pread_at(io: *const c_void, paddr: u64, buff: *const u8, len: usize);
     fn r_io_seek(io: *const c_void, offset: u64, whence: i32);
 }
 pub fn new<'a>() -> &'a c_void {
@@ -46,10 +46,10 @@ pub fn open_nomap(io: &c_void, file: &str, flags: i32, mode: i32) -> *const c_vo
     unsafe { r_io_open_nomap(io, cstr.as_ptr(), flags, mode) }
 }
 pub fn pwrite(io: &c_void, paddr: u64, buf: &[u8]) {
-    unsafe { r_io_pwrite(io, paddr, buf.as_ptr(), buf.len()) };
+    unsafe { r_io_pwrite_at(io, paddr, buf.as_ptr(), buf.len()) };
 }
 pub fn pread(io: &c_void, paddr: u64, buf: &mut [u8]) {
-    unsafe { r_io_pread(io, paddr, buf.as_ptr(), buf.len()) };
+    unsafe { r_io_pread_at(io, paddr, buf.as_ptr(), buf.len()) };
 }
 pub fn seek(io: &c_void, offset: u64, whence: Seek) {
     unsafe { r_io_seek(io, offset, whence as i32) };
